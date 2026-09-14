@@ -7,6 +7,13 @@ const SidePanel = () => {
    const [isOpen, setIsOpen] = useState(false)
    const [genres, setGenres] = useState<{ id: number; name: string }[]>([])
 
+   const categories = [
+      "Popular",
+      "Top Rated",
+      "Now Playinh",
+      "Upcoming",
+   ]
+
    useEffect(() => {
       getGenres().then((result) => setGenres(result.genres))
    }, [])
@@ -36,28 +43,43 @@ const SidePanel = () => {
             }`}
          >
             <div className="flex flex-col gap-4 justify-center pt-4 pl-4">
-                  <img
-                     src="src/assets/arrow-back.svg"
-                     alt="Arrow back icon"
-                     className="size-8 shrink-0 invert transform transition-transform duration-300 rotate-180 hover:scale-120"
-                     onClick={() => setIsOpen(false)}
-                  />
-
+               <img
+                  src="src/assets/arrow-back.svg"
+                  alt="Arrow back icon"
+                  className="size-8 shrink-0 invert transform transition-transform duration-300 rotate-180 hover:scale-120"
+                  onClick={() => setIsOpen(false)}
+               />
 
                <div className="flex flex-col gap-2 divide-y divide-sidebar-ring">
-                  <p className="text-lg font-semibold">Categories</p>
+                  <p className="text-lg font-semibold select-none">
+                     Categories
+                  </p>
                   <div className="flex flex-col gap-1 pl-2">
-                     <p>Most Rated</p>
-                     <p>Popular</p>
+
+                     {categories.map((category) => {
+                        return (
+                           <button
+                              className="flex justify-start origin-left transform transition-transform hover:scale-110"
+                           >
+                              <p>{category}</p>
+                           </button>
+                        )
+                     })}
                   </div>
                </div>
 
                <div className="flex flex-col gap-2 divide-y divide-sidebar-ring">
-                  <p className="text-lg font-semibold">Genres</p>
+                  <p className="text-lg font-semibold select-none">
+                     Genres
+                  </p>
                   <div className="flex flex-col gap-2 pl-2">
                      {genres.map((genre) => {
                         return (
-                           <p key={genre.id}>{genre.name}</p>
+                           <button
+                              className="flex justify-start origin-left transform transition-transform hover:scale-110"
+                           >
+                              <p key={genre.id}>{genre.name}</p>
+                           </button>
                         )
                      })}
                   </div>

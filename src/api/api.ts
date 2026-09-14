@@ -30,6 +30,27 @@ export const getGenres = async () => {
   return GenreListSchema.parse(data)
 }
 
+async function getMoviesByGenre(genreId: number, page = 1) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&page=${page}&language=en`
+  );
+
+  if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
+  return res.json();
+}
+
+async function getMoviesByCategory(
+  category: "popular" | "top_rated" | "now_playing" | "upcoming",
+  page = 1
+) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${category}?api_key=${API_KEY}&page=${page}&language=en`
+  );
+
+  if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
+  return res.json();
+}
+
 
 
 
