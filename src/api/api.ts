@@ -1,3 +1,4 @@
+import { GenreListSchema } from '@/schemas/genre-list-schema';
 import { MultiSearchResponseSchema } from '../schemas/multi-search-schema'
 
 const API_KEY = import.meta.env.VITE_API_KEY
@@ -12,9 +13,43 @@ export const searchMulti = async (query: string) => {
     throw new Error(`TMDB API error: ${response.status}`);
   }
   const data = await response.json();
-  
+
   return MultiSearchResponseSchema.parse(data);
 };
+
+export const getGenres = async () => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en`
+  )
+
+  if (!response.ok) {
+    throw new Error(`TMDB API error: ${response.status}`);
+  }
+  const data = await response.json();
+
+  return GenreListSchema.parse(data)
+}
+
+async function getMoviesByGenre(genreId: number, page = 1) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&page=${page}&language=en`
+  );
+
+  if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
+  return res.json();
+}
+
+async function getMoviesByCategory(
+  category: "popular" | "top_rated" | "now_playing" | "upcoming",
+  page = 1
+) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${category}?api_key=${API_KEY}&page=${page}&language=en`
+  );
+
+  if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
+  return res.json();
+}
 
 
 
