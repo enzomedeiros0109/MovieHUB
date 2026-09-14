@@ -17,6 +17,11 @@ export const searchMulti = async (query: string) => {
   return MultiSearchResponseSchema.parse(data);
 };
 
+export function getPosterUrl(posterPath: string | null, size: "w92" | "w154" | "w185" | "w342" | "w500" | "w780" | "original" = "w342") {
+  if (!posterPath) return null;
+  return `https://image.tmdb.org/t/p/${size}${posterPath}`;
+}
+
 export const getGenres = async () => {
   const response = await fetch(
     `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en`
@@ -30,7 +35,7 @@ export const getGenres = async () => {
   return GenreListSchema.parse(data)
 }
 
-async function getMoviesByGenre(genreId: number, page = 1) {
+export async function getMoviesByGenre(genreId: number, page = 1) {
   const res = await fetch(
     `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&page=${page}&language=en`
   );
@@ -39,7 +44,7 @@ async function getMoviesByGenre(genreId: number, page = 1) {
   return res.json();
 }
 
-async function getMoviesByCategory(
+export async function getMoviesByCategory(
   category: "popular" | "top_rated" | "now_playing" | "upcoming",
   page = 1
 ) {
@@ -48,7 +53,9 @@ async function getMoviesByCategory(
   );
 
   if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
-  return res.json();
+
+  const data = await res.json()
+  return MultiSearchResponseSchema.parse(data)
 }
 
 
