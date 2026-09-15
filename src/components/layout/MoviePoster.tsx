@@ -20,7 +20,9 @@ const MoviePoster = ({ movies, genreNames }: Props) => {
          movieYear: movie.release_date.slice(0, 4),
          vote_average: movie.vote_average,
          overview: movie.overview,
-         backdrop_path: `https://image.tmdb.org/t/p/original${movie.backdrop_path}`,
+         backdrop_path: movie.backdrop_path
+            ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+            : "",
       }
 
       navigate(`/MoviePage/${movie.id}`, { state: moviePageProps })

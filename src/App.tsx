@@ -23,12 +23,18 @@ function MoviePageRoute() {
 function App() {
 
   const [selection, setSelection] = useState<HomeSelection>(null)
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleSelection = (nextSelection: HomeSelection) => {
+    setSelection(nextSelection)
+    setSearchQuery("")
+  }
 
   return (
     <div className="bg-background">
-      <Header onSelect={setSelection}/>
+      <Header onSelect={handleSelection} onSearch={setSearchQuery} searchQuery={searchQuery}/>
       <Routes>
-        <Route path="/" element={<Home selection={selection}/>} />
+        <Route path="/" element={<Home selection={selection} searchQuery={searchQuery}/>} />
         <Route path="/MoviePage/:movieId" element={<MoviePageRoute />} />
       </Routes>
     </div>

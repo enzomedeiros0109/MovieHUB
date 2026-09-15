@@ -19,6 +19,19 @@ export const searchMulti = async (query: string) => {
   return MultiSearchResponseSchema.parse(data);
 };
 
+export const searchMovies = async (query: string, page = 1) => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}&language=en`
+  );
+
+  if (!response.ok) {
+    throw new Error(`TMDB API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return SearchByGenreSchema.parse(data);
+};
+
 export function getPosterUrl(posterPath: string | null, size: "w92" | "w154" | "w185" | "w342" | "w500" | "w780" | "original" = "w342") {
   if (!posterPath) return null;
   return `https://image.tmdb.org/t/p/${size}${posterPath}`;

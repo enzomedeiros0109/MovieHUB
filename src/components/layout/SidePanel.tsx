@@ -27,16 +27,16 @@ const SidePanel = ({ onSelect }: Props) => {
 
    return (
       <>
-         <Button
-            className="items-center bg-white size-12 cursor-pointer hover:scale-110"
+         <div
+            className="items-center p-2 bg-white cursor-pointer transform transition-transform hover:scale-110 rounded-full"
             onClick={() => setIsOpen(true)}
          >
             <img
                src={Menu}
                alt="Menu icon"
-               className="shrink-0 hover:scale-105 cursor-pointer"
+               className="h-7 w-8 shrink-0 hover:scale-105 cursor-pointer"
             />
-         </Button>
+         </div>
 
          <div
             className={`
