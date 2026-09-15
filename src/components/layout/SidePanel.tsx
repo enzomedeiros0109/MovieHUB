@@ -3,18 +3,24 @@ import { Button } from "../ui/button"
 import { getGenres } from "@/api/api"
 import Menu from '@/assets/menu.svg'
 import ArrowBack from '@/assets/arrow-back.svg'
+import { useNavigate } from "react-router-dom"
+import type { HomeSelection } from "@/App"
 
-const SidePanel = () => {
+type Props = {
+   onSelect: (selection: HomeSelection) => void
+}
+
+const SidePanel = ({ onSelect }: Props) => {
 
    const [isOpen, setIsOpen] = useState(false)
    const [genres, setGenres] = useState<{ id: number; name: string }[]>([])
 
    const categories = [
-      "Popular",
-      "Top Rated",
-      "Now Playinh",
-      "Upcoming",
-   ]
+      { label: "Popular", value: "popular" },
+      { label: "Top Rated", value: "top_rated" },
+      { label: "Now Playing", value: "now_playing" },
+      { label: "Upcoming", value: "upcoming" },
+   ] as const
 
    useEffect(() => {
       getGenres().then((result) => setGenres(result.genres))
@@ -23,13 +29,13 @@ const SidePanel = () => {
    return (
       <>
          <Button
-            className="items-center size-12 cursor-pointer hover:scale-110"
+            className="items-center bg-white size-12 cursor-pointer hover:scale-110"
             onClick={() => setIsOpen(true)}
          >
             <img
                src={Menu}
                alt="Menu icon"
-               className="size-10 shrink-0 hover:scale-105 cursor-pointer"
+               className="shrink-0 hover:scale-105 cursor-pointer"
             />
          </Button>
 
@@ -63,8 +69,15 @@ const SidePanel = () => {
                         return (
                            <button
                               className="flex justify-start origin-left transform transition-transform hover:scale-110"
+                              onClick={() => {
+                                 onSelect({
+                                    type: "category",
+                                    value: category.value,
+                                 })
+                                 setIsOpen(false)
+                              }}
                            >
-                              <p>{category}</p>
+                              <p>{category.label}</p>
                            </button>
                         )
                      })}
@@ -80,8 +93,15 @@ const SidePanel = () => {
                         return (
                            <button
                               className="flex justify-start origin-left transform transition-transform hover:scale-110"
+                              onClick={() => {
+                                 onSelect({
+                                    type: "genre",
+                                    value: genre.id,
+                                 })
+                                 setIsOpen(false)
+                              }}
                            >
-                              <p key={genre.id}>{genre.name}</p>
+                              {genre.name}
                            </button>
                         )
                      })}

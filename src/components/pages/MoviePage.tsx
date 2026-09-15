@@ -71,7 +71,7 @@ const MoviePage = ({ movie_id, title, movieYear, director, vote_average, overvie
                            </div>
                         )}
                         <div className="mb-4">
-                           <p className="text-sm font-semibold wrap-break-word">{actor.name}</p>
+                           <p className="text-sm font-semibold">{actor.name}</p>
                            <p className="text-sm text-white/60">as {actor.character}</p>
                         </div>
                      </div>

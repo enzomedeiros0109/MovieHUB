@@ -1,26 +1,14 @@
-import { useEffect, useState } from "react";
 import { Card as CardRoot, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
-import { getPosterUrl, getTrendingMovies } from "@/api/api";
+import { getPosterUrl } from "@/api/api";
 import { useNavigate } from "react-router-dom";
 import type { MoviePageProps } from "../pages/MoviePage";
+import type { MovieSearchResponse } from "@/schemas/search-by-genre-schema"
 
+type Props = {
+   movies: MovieSearchResponse["results"]
+}
 
-const MoviePoster = () => {
-   const [trendingMovies, setTrendingMovies] = useState<{
-      id: number;
-      title?: string;
-      original_title?: string;
-      popularity: number;
-      vote_average: number;
-      poster_path: string | null;
-      backdrop_path: string;
-      overview: string;
-      release_date: string
-   }[]>([])
-
-   useEffect(() => {
-      getTrendingMovies("week").then((result) => setTrendingMovies(result.results))
-   }, [])
+const MoviePoster = ({ movies }: Props) => {
 
    function formatDate(dateStr: string): string {
       if (!dateStr) return '';
@@ -34,7 +22,7 @@ const MoviePoster = () => {
 
    const navigate = useNavigate()
 
-   const handlePosterClick = (movie: typeof trendingMovies[number]) => {
+   const handlePosterClick = (movie: MovieSearchResponse["results"][number]) => {
       const moviePageProps: MoviePageProps = {
          movie_id: movie.id,
          title: movie.title ?? movie.original_title ?? "Unknown title",
@@ -49,7 +37,7 @@ const MoviePoster = () => {
 
    return (
       <>
-         {trendingMovies.map((movie) => {
+         {movies.map((movie) => {
             const movieTitle = movie.title ?? movie.original_title ?? "Unknown title";
             const posterUrl = movie.poster_path ? getPosterUrl(movie.poster_path) : undefined;
 
@@ -58,7 +46,7 @@ const MoviePoster = () => {
                   className="border border-transparent rounded-4xl transform transition-all duration-300 ease-in-out hover:scale-105 hover:border-white cursor-pointer"
                   onClick={() => handlePosterClick(movie)}
                >
-                  <CardRoot key={movie.id} className="w-90 md:w-80 h-auto flex flex-col">
+                  <CardRoot className="w-90 md:w-80 h-auto flex flex-col">
                      <CardHeader className="w-full">
                         <CardTitle className="text-center text-xl font-bold">{movieTitle}</CardTitle>
                      </CardHeader>
