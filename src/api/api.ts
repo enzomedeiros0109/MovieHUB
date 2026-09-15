@@ -1,6 +1,7 @@
 import { GenreListSchema } from '@/schemas/genre-list-schema';
 import { MultiSearchResponseSchema } from '../schemas/multi-search-schema'
 import { SearchByGenreSchema } from '@/schemas/search-by-genre-schema';
+import { CreditsResponseSchema } from '@/schemas/movie-credits-schema';
 
 const API_KEY = import.meta.env.VITE_API_KEY
 
@@ -57,6 +58,29 @@ export async function getMoviesByCategory(
 
   const data = await res.json()
   return SearchByGenreSchema.parse(data)
+}
+
+export async function getTrendingMovies(time_window: string) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/trending/movie/${time_window}?api_key=${API_KEY}`
+  );
+
+  if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
+
+  const data = await res.json()
+  return SearchByGenreSchema.parse(data)
+}
+
+export async function getMovieCredits(movie_id: string) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${movie_id}/credits?api_key=${API_KEY}`
+  );
+
+  if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
+
+  const data = await res.json()
+
+  return CreditsResponseSchema.parse(data)
 }
 
 

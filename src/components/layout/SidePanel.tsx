@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { Button } from "../ui/button"
 import { getGenres } from "@/api/api"
+import Menu from '@/assets/menu.svg'
+import ArrowBack from '@/assets/arrow-back.svg'
 
 const SidePanel = () => {
 
@@ -25,7 +27,7 @@ const SidePanel = () => {
             onClick={() => setIsOpen(true)}
          >
             <img
-               src="src/assets/menu.svg"
+               src={Menu}
                alt="Menu icon"
                className="size-10 shrink-0 hover:scale-105 cursor-pointer"
             />
@@ -33,20 +35,21 @@ const SidePanel = () => {
 
          <div
             className={`
-            fixed inset-0 bg-black/40 transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            fixed z-1001 inset-0 bg-black/40 transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                }`}
+            onClick={() => setIsOpen(false)}
          >
          </div >
 
          <div className={`
-         fixed top-0 right-0 h-full shadow-2xl w-60 bg-linear-to-r from-sidebar to-sidebar-accent transform transition-transform duration-400 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+         fixed top-0 z-1001 right-0 h-full shadow-2xl w-60 bg-linear-to-r from-sidebar to-sidebar-accent transform transition-transform duration-400 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
             }`}
          >
             <div className="flex flex-col gap-4 justify-center pt-4 pl-4">
                <img
-                  src="src/assets/arrow-back.svg"
+                  src={ArrowBack}
                   alt="Arrow back icon"
-                  className="size-8 shrink-0 invert transform transition-transform duration-300 rotate-180 hover:scale-120"
+                  className="size-8 shrink-0 invert transform transition-transform duration-300 rotate-180 hover:scale-120 cursor-pointer"
                   onClick={() => setIsOpen(false)}
                />
 
