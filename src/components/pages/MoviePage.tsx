@@ -55,7 +55,7 @@ const MoviePage = ({ movie_id, title, movieYear, director, vote_average, overvie
             <div className="grid grid-cols-3 justify-between">
                {movieCredit.map((actor) => {
                   return (
-                     <div key={actor.credit_id} className="flex flex-col gap-2 items-center justify-center text-center">
+                     <div key={actor.credit_id} className="flex flex-col gap-2 items-center justify-center text-center mt-2">
                         {actor.profile_path ? (
                            <img
                               src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
