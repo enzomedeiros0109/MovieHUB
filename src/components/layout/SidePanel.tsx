@@ -3,7 +3,6 @@ import { Button } from "../ui/button"
 import { getGenres } from "@/api/api"
 import Menu from '@/assets/menu.svg'
 import ArrowBack from '@/assets/arrow-back.svg'
-import { useNavigate } from "react-router-dom"
 import type { HomeSelection } from "@/App"
 
 type Props = {

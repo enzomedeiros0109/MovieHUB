@@ -6,19 +6,10 @@ import type { MovieSearchResponse } from "@/schemas/search-by-genre-schema"
 
 type Props = {
    movies: MovieSearchResponse["results"]
+   genreNames: Record<number, string>
 }
 
-const MoviePoster = ({ movies }: Props) => {
-
-   function formatDate(dateStr: string): string {
-      if (!dateStr) return '';
-
-      const [year, month, day] = dateStr.split(/[/-]/);
-
-      if (!year || !month || !day) return dateStr;
-
-      return `${day}/${month}/${year}`;
-   }
+const MoviePoster = ({ movies, genreNames }: Props) => {
 
    const navigate = useNavigate()
 
@@ -62,8 +53,18 @@ const MoviePoster = ({ movies }: Props) => {
                         )}
                      </CardContent>
                      <CardFooter className="justify-between">
-                        <p>{formatDate(movie.release_date)}</p>
-                        <p >{(movie.vote_average).toFixed(1)}/10</p>
+                        <p>
+                           {movie.genre_ids
+                              .map((genreId) => genreNames[genreId])
+                              .filter(Boolean)
+                              .map((genre, index) => (
+                                 <span key={`${movie.id}-${genre}-${index}`} className="block text-start">
+                                    {genre}
+                                 </span>
+                              ))}
+                           {movie.genre_ids.every((genreId) => !genreNames[genreId]) && "Genres unavailable"}
+                        </p>
+                        <p className="text-lg">{(movie.vote_average).toFixed(1)}/10</p>
                      </CardFooter>
                   </CardRoot>
                </button>
