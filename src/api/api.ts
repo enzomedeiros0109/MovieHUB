@@ -1,5 +1,6 @@
 import { GenreListSchema } from '@/schemas/genre-list-schema';
 import { MultiSearchResponseSchema } from '../schemas/multi-search-schema'
+import { SearchByGenreSchema } from '@/schemas/search-by-genre-schema';
 
 const API_KEY = import.meta.env.VITE_API_KEY
 
@@ -55,7 +56,7 @@ export async function getMoviesByCategory(
   if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
 
   const data = await res.json()
-  return MultiSearchResponseSchema.parse(data)
+  return SearchByGenreSchema.parse(data)
 }
 
 

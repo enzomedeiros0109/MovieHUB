@@ -10,11 +10,22 @@ const MoviePoster = () => {
       popularity: number;
       vote_average: number;
       poster_path: string | null;
+      release_date: string
    }[]>([])
 
    useEffect(() => {
       getMoviesByCategory("popular").then((result) => setPopularMovies(result.results))
    }, [])
+
+   function formatDate(dateStr: string): string {
+      if (!dateStr) return '';
+
+      const [year, month, day] = dateStr.split(/[/-]/);
+
+      if (!year || !month || !day) return dateStr;
+
+      return `${day}/${month}/${year}`;
+   }
 
    return (
       <>
@@ -23,26 +34,31 @@ const MoviePoster = () => {
             const posterUrl = movie.poster_path ? getPosterUrl(movie.poster_path) : undefined;
 
             return (
-               <CardRoot key={movie.id} className="w-70 h-100 p-2 flex flex-col">
-                  <CardHeader className="w-full">
-                     <CardTitle className="text-center">{movieTitle}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex w-full flex-1 items-center justify-center text-center">
-                     {posterUrl ? (
-                        <img
-                           src={posterUrl}
-                           alt={movieTitle}
-                           className="h-60 w-full object-cover rounded-md"
-                        />
-                     ) : (
-                        <p>Poster not available</p>
-                     )}
-                  </CardContent>
-                  <CardFooter className="justify-between">
-                     <p>{movie.popularity}</p>
-                     <p>{Math.round(movie.vote_average)}/10</p>
-                  </CardFooter>
-               </CardRoot>
+               <button
+                  className="border border-transparent rounded-4xl transform transition-all duration-300 ease-in-out hover:scale-105 hover:border-white"
+
+               >
+                  <CardRoot key={movie.id} className="w-70 h-auto flex flex-col">
+                     <CardHeader className="w-full">
+                        <CardTitle className="text-center text-xl font-bold">{movieTitle}</CardTitle>
+                     </CardHeader>
+                     <CardContent className="flex w-full items-center justify-center text-center">
+                        {posterUrl ? (
+                           <img
+                              src={posterUrl}
+                              alt={movieTitle}
+                              className="h-80 w-full object-cover rounded-md"
+                           />
+                        ) : (
+                           <p>Poster not available</p>
+                        )}
+                     </CardContent>
+                     <CardFooter className="justify-between">
+                        <p>{formatDate(movie.release_date)}</p>
+                        <p >{(movie.vote_average).toFixed(2)}/10</p>
+                     </CardFooter>
+                  </CardRoot>
+               </button>
             )
          })}
       </>
