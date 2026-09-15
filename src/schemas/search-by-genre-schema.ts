@@ -5,14 +5,14 @@ export const SearchByGenreSchema = z.object({
   results: z.array(
     z.object({
       adult: z.boolean().default(true),
-      backdrop_path: z.string(),
+      backdrop_path: z.string().nullable(),
       genre_ids: z.array(z.number().int()),
       id: z.number().int().default(0),
       original_language: z.string(),
       original_title: z.string(),
       overview: z.string(),
       popularity: z.number().default(0),
-      poster_path: z.string(),
+      poster_path: z.string().nullable(),
       release_date: z.string(),
       title: z.string(),
       video: z.boolean().default(true),

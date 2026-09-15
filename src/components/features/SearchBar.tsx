@@ -1,23 +1,121 @@
-import Search from '@/assets/search-icon.svg'
+import { useEffect, useRef, useState } from "react"
+import { searchMulti, getPosterUrl } from "@/api/api"
+import type { MoviePageProps } from "../pages/MoviePage"
+import { useNavigate } from "react-router-dom"
+import { Input } from '../ui/input'
+import { Button } from '../ui/button'
+import { ButtonGroup } from '../ui/button-group'
 
+type Props = {
+  onSearch: (query: string) => void
+  searchQuery: string
+}
 
-type Props = {}
+const SearchBar = ({ onSearch, searchQuery }: Props) => {
+  const [query, setQuery] = useState("")
+  const [suggestions, setSuggestions] = useState<Awaited<ReturnType<typeof searchMulti>>["results"]>([])
+  const searchContainerRef = useRef<HTMLDivElement>(null)
+  const navigate = useNavigate()
 
-const SearchBar = ({ }: Props) => {
+  useEffect(() => {
+    setQuery(searchQuery)
+  }, [searchQuery])
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (!searchContainerRef.current?.contains(event.target as Node)) {
+        setSuggestions([])
+      }
+    }
+
+    document.addEventListener("mousedown", handleOutsideClick)
+    return () => document.removeEventListener("mousedown", handleOutsideClick)
+  }, [])
+
+  useEffect(() => {
+    const trimmedQuery = query.trim()
+
+    if (!trimmedQuery) {
+      setSuggestions([])
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      searchMulti(trimmedQuery)
+        .then((result) => {
+              setSuggestions(result.results.filter((result) => result.media_type === "movie").slice(0, 10))
+        })
+        .catch(() => setSuggestions([]))
+    }, 300)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [query])
+
+  const handleSuggestionClick = (movie: typeof suggestions[number]) => {
+    const moviePageProps: MoviePageProps = {
+      movie_id: movie.id,
+      title: movie.title ?? movie.original_title ?? "Unknown title",
+      movieYear: movie.release_date?.slice(0, 4) ?? "",
+      vote_average: movie.vote_average,
+      overview: movie.overview,
+      backdrop_path: movie.backdrop_path
+        ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+        : "",
+    }
+
+    setQuery("")
+    setSuggestions([])
+    navigate(`/MoviePage/${movie.id}`, { state: moviePageProps })
+  }
+
+  const handleSearch = () => {
+    const trimmedQuery = query.trim()
+
+    if (!trimmedQuery) return
+
+    setSuggestions([])
+    onSearch(trimmedQuery)
+    navigate("/")
+  }
+
    return (
-      <div className="w-100 h-10 flex bg-foreground rounded-md items-center p-2 gap-1">
-         <div className="bg-card/10 rounded-full p-1">
-            <img
-               src={Search}
-               alt="Search Icon"
-               className="size-5 shrink-0" />
-         </div>
-         <input
-            type="text"
-            className="h-5 w-full text-black outline-none text-base"
-            placeholder="Search for movies..."
-         />
-      </div>
+    <div ref={searchContainerRef} className="relative w-full max-w-xl">
+      <ButtonGroup className="w-full">
+        <Input
+          id="movie-search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Type to search..."
+          aria-label="Search movies"
+        />
+        <Button type="button" variant="outline" onClick={handleSearch}>Search</Button>
+      </ButtonGroup>
+
+      {suggestions.length > 0 && (
+        <div className="animate-in fade-in-0 slide-in-from-top-2 duration-200 motion-reduce:animate-none absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border bg-popover p-1 text-popover-foreground shadow-lg">
+          {suggestions.map((movie) => {
+            const movieTitle = movie.title ?? movie.original_title ?? "Unknown title"
+            const posterUrl = movie.poster_path ? getPosterUrl(movie.poster_path, "w92") : null
+
+            return (
+              <button
+                key={movie.id}
+                type="button"
+                className="flex w-full items-center gap-3 rounded-lg p-2 text-left hover:bg-muted"
+                onClick={() => handleSuggestionClick(movie)}
+              >
+                {posterUrl ? (
+                  <img src={posterUrl} alt="" className="size-10 rounded object-cover" />
+                ) : (
+                  <div className="size-10 rounded bg-muted" />
+                )}
+                <span className="min-w-0 truncate">{movieTitle}</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </div>
    )
 }
 
