@@ -92,7 +92,7 @@ const SearchBar = ({ onSearch, searchQuery }: Props) => {
       </ButtonGroup>
 
       {suggestions.length > 0 && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border bg-popover p-1 text-popover-foreground shadow-lg">
+        <div className="animate-in fade-in-0 slide-in-from-top-2 duration-200 motion-reduce:animate-none absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border bg-popover p-1 text-popover-foreground shadow-lg">
           {suggestions.map((movie) => {
             const movieTitle = movie.title ?? movie.original_title ?? "Unknown title"
             const posterUrl = movie.poster_path ? getPosterUrl(movie.poster_path, "w92") : null
