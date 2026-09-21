@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { ButtonGroup } from '../ui/button-group'
+import { Search } from 'lucide-react'
 
 type Props = {
   onSearch: (query: string) => void
@@ -88,7 +89,19 @@ const SearchBar = ({ onSearch, searchQuery }: Props) => {
           placeholder="Type to search..."
           aria-label="Search movies"
         />
-        <Button type="button" variant="outline" onClick={handleSearch}>Search</Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          className="md:w-auto md:px-3"
+          aria-label="Search"
+          onClick={handleSearch}
+        >
+          <div className="flex gap-2 justify-center items-center">
+            <Search />
+            <span className="sr-only md:not-sr-only">Search</span>
+          </div>
+        </Button>
       </ButtonGroup>
 
       {suggestions.length > 0 && (

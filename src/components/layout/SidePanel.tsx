@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { Button } from "../ui/button"
 import { getGenres } from "@/api/api"
 import Menu from '@/assets/menu.svg'
 import ArrowBack from '@/assets/arrow-back.svg'
@@ -27,16 +26,18 @@ const SidePanel = ({ onSelect }: Props) => {
 
    return (
       <>
-         <div
-            className="items-center p-2 bg-white cursor-pointer transform transition-transform hover:scale-110 rounded-full"
+         <button
+            type="button"
+            aria-label="Open menu"
+            className="flex h-10 w-10 min-w-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white p-2 transition-transform hover:scale-110"
             onClick={() => setIsOpen(true)}
          >
             <img
                src={Menu}
                alt="Menu icon"
-               className="h-7 w-8 shrink-0 hover:scale-105 cursor-pointer"
+               className="size-6 shrink-0"
             />
-         </div>
+         </button>
 
          <div
             className={`
