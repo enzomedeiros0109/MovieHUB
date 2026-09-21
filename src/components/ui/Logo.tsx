@@ -1,13 +1,16 @@
 import logo from "@/assets/logo.svg"
 import { useNavigate } from "react-router-dom"
 
-type Props = {}
+type Props = {
+  onHome: () => void
+}
 
-const Logo = ({ }: Props) => {
+const Logo = ({ onHome }: Props) => {
 
   const navigate = useNavigate()
 
   const handleLogoClick = () => {
+    onHome()
     navigate("/")
   }
 
