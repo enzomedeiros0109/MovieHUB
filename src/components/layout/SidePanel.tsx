@@ -29,6 +29,14 @@ const SidePanel = ({ onSelect }: Props) => {
       }).catch(() => setIsLoading(false))
    }, [])
 
+   useEffect(() => {
+      document.body.style.overflow = isOpen ? "hidden" : ""
+
+      return () => {
+         document.body.style.overflow = ""
+      }
+   }, [isOpen])
+
    return (
       <>
          <button
@@ -53,7 +61,7 @@ const SidePanel = ({ onSelect }: Props) => {
          </div >
 
          <div className={`
-         fixed top-0 z-1001 right-0 h-full shadow-2xl w-60 bg-linear-to-r from-sidebar to-sidebar-accent transform transition-transform duration-400 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+         fixed top-0 z-1001 right-0 h-full max-h-screen overflow-x-hidden overflow-y-auto shadow-2xl w-60 bg-linear-to-r from-sidebar to-sidebar-accent transform transition-transform duration-400 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
             }`}
          >
             <div className="flex flex-col gap-4 justify-center pt-4 pl-4">
