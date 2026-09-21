@@ -2,6 +2,9 @@ import { GenreListSchema } from '@/schemas/genre-list-schema';
 import { MultiSearchResponseSchema } from '../schemas/multi-search-schema'
 import { SearchByGenreSchema } from '@/schemas/search-by-genre-schema';
 import { CreditsResponseSchema } from '@/schemas/movie-credits-schema';
+import { MovieDetailsSchema } from '@/schemas/movie-details-schema';
+import { MovieImagesSchema } from '@/schemas/movie-images-schema';
+import { OmdbPlotSchema } from '@/schemas/omdb-plot-schema';
 
 const API_KEY = import.meta.env.VITE_API_KEY
 
@@ -94,6 +97,52 @@ export async function getMovieCredits(movie_id: string) {
   const data = await res.json()
 
   return CreditsResponseSchema.parse(data)
+}
+
+export async function getMovieDetails(movieId: number) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en`
+  )
+
+  if (!res.ok) throw new Error(`TMDB error: ${res.status}`)
+
+  return MovieDetailsSchema.parse(await res.json())
+}
+
+export async function getSimilarMovies(movieId: number) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${API_KEY}&language=en&page=1`
+  )
+
+  if (!res.ok) throw new Error(`TMDB error: ${res.status}`)
+
+  return SearchByGenreSchema.parse(await res.json())
+}
+
+export async function getMovieImages(movieId: number) {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/movie/${movieId}/images?api_key=${API_KEY}&include_image_language=en,null`
+  )
+
+  if (!res.ok) throw new Error(`TMDB error: ${res.status}`)
+
+  return MovieImagesSchema.parse(await res.json())
+}
+
+export async function getFullMoviePlot(imdbId: string) {
+  const omdbKey = import.meta.env.VITE_OMDB_API_KEY
+  const res = await fetch(
+    `https://www.omdbapi.com/?apikey=${omdbKey}&i=${encodeURIComponent(imdbId)}&plot=full`
+  )
+
+  if (!res.ok) throw new Error(`OMDb error: ${res.status}`)
+
+  const data = OmdbPlotSchema.parse(await res.json())
+  if (data.Response === "False") throw new Error("OMDb plot unavailable")
+
+  if (data.Plot === "N/A") throw new Error("OMDb plot unavailable")
+
+  return data.Plot
 }
 
 
