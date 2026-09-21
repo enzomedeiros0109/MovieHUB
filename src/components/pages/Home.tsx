@@ -69,7 +69,7 @@ function Home({ selection, searchQuery }: Props) {
 
    return (
       <div className="p-4">
-        {searchQuery && <h1 className="mb-4 text-2xl font-semibold">Results for {searchQuery}</h1>}
+        {searchQuery && <h1 className="mb-4 text-2xl font-semibold">Results for "{searchQuery}"</h1>}
         <div className="grid grid-cols-1 gap-6 place-items-center justify-between md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
          <MoviePoster movies={movies} genreNames={genreNames} />
         </div>
