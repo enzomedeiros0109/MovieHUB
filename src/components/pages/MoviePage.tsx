@@ -47,7 +47,7 @@ const MoviePage = ({ movie_id, title, movieYear, director, vote_average, overvie
                WebkitMaskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
             }}
          />
-         <div className="relative z-10 flex max-w-3xl flex-col gap-3 bg-linear-to-r from-black via-black/70 to-transparent p-8">
+         <div className="relative z-10 flex max-w-3xl flex-col gap-3 bg-linear-to-r from-black via-black/70 to-transparent p-8 md:mx-auto md:w-full">
             <div className="flex items-center gap-3">
                <h1 className="text-4xl font-bold">{title}</h1>
                <p className="text-base text-white/80 mt-1.5">{movieYear}</p>
@@ -57,32 +57,34 @@ const MoviePage = ({ movie_id, title, movieYear, director, vote_average, overvie
             )}
             <p className="font-semibold text-amber-300">{vote_average.toFixed(1)}/10</p>
             <p className="max-w-2xl text-white/90">{overview}</p>
-            <h1 className="text-2xl font-semibold">Main Cast</h1>
-            <div className="grid grid-cols-3 justify-between">
-               {movieCredit.map((actor) => {
-                  return (
-                     <div key={actor.credit_id} className="flex flex-col gap-2 items-center">
-                        {actor.profile_path ? (
-                           <img
-                              src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
-                              alt={`${actor.name} image`}
-                              className="size-20 rounded-full object-cover"
-                           />
-                        ) : (
-                           <div className="flex size-20 items-center justify-center rounded-full bg-white/20 text-xs">
+            <div className="flex flex-col gap-4 w-full text-center items-start">
+               <h1 className="border-l-3 border-white pl-3 py-2 text-left text-2xl font-semibold my-4">Main Cast</h1>
+               <div className="w-full grid grid-cols-2 justify-between md:grid-cols-4 md:gap-10">
+                  {movieCredit.map((actor) => {
+                     return (
+                        <div key={actor.credit_id} className="flex flex-col items-center gap-2">
+                           {actor.profile_path ? (
                               <img
-                                 src={UnknownUser} alt="Image"
-                                 className="size-20"
+                                 src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
+                                 alt={`${actor.name} image`}
+                                 className="size-20 rounded-full object-cover"
                               />
+                           ) : (
+                              <div className="flex size-20 items-center justify-center rounded-full bg-white/20 text-xs">
+                                 <img
+                                    src={UnknownUser} alt="Image"
+                                    className="size-20"
+                                 />
+                              </div>
+                           )}
+                           <div className="mb-4 text-center">
+                              <p className="text-sm font-semibold">{actor.name}</p>
+                              <p className="text-sm text-white/60">as {actor.character}</p>
                            </div>
-                        )}
-                        <div className="text-center mb-4">
-                           <p className="text-sm font-semibold">{actor.name}</p>
-                           <p className="text-sm text-white/60">as {actor.character}</p>
                         </div>
-                     </div>
-                  )
-               })}
+                     )
+                  })}
+               </div>
             </div>
          </div>
       </section>
