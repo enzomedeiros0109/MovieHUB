@@ -3,6 +3,7 @@ import { getGenres, getMoviesByGenre } from "@/api/api"
 import type { MovieSearchResponse } from "@/schemas/search-by-genre-schema"
 import MoviePoster from "../layout/MoviePoster"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel"
+import HomeSkeleton from "../skeletons/HomeSkeleton"
 
 type MovieCarouselProps = {
   title: string
@@ -37,6 +38,7 @@ function MovieCarousel({ title, movies, genreNames }: MovieCarouselProps) {
 function Home() {
   const [genreNames, setGenreNames] = useState<Record<number, string>>({})
   const [genreMovies, setGenreMovies] = useState<Record<number, MovieSearchResponse["results"]>>({})
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     let cancelled = false
@@ -49,13 +51,20 @@ function Home() {
         return [genre.id, response.results] as const
       }))
     }).then((results) => {
-      if (!cancelled && results) setGenreMovies(Object.fromEntries(results))
+      if (!cancelled && results) {
+        setGenreMovies(Object.fromEntries(results))
+        setIsLoading(false)
+      }
+    }).catch(() => {
+      if (!cancelled) setIsLoading(false)
     })
 
     return () => {
       cancelled = true
     }
   }, [])
+
+  if (isLoading) return <HomeSkeleton />
 
    return (
     <div className="mx-auto flex max-w-7xl flex-col gap-4 p-4">

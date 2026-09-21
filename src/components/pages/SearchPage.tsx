@@ -3,6 +3,7 @@ import { getGenres, getMoviesByCategory, getMoviesByGenre, searchMovies } from "
 import type { MovieSearchResponse } from "@/schemas/search-by-genre-schema"
 import type { HomeSelection } from "@/App"
 import MoviePoster from "../layout/MoviePoster"
+import SearchPageSkeleton from "../skeletons/SearchPageSkeleton"
 
 type Props = {
    selection: HomeSelection
@@ -12,6 +13,7 @@ type Props = {
 function SearchPage({ selection, searchQuery }: Props) {
    const [movies, setMovies] = useState<MovieSearchResponse["results"]>([])
    const [genreNames, setGenreNames] = useState<Record<number, string>>({})
+   const [isLoading, setIsLoading] = useState(true)
 
    useEffect(() => {
       getGenres().then((result) => {
@@ -29,26 +31,41 @@ function SearchPage({ selection, searchQuery }: Props) {
             searchMovies(searchQuery, 2),
             searchMovies(searchQuery, 3),
          ]).then((results) => {
-            if (!cancelled) setMovies(results.flatMap((result) => result.results))
+            if (!cancelled) {
+               setMovies(results.flatMap((result) => result.results))
+               setIsLoading(false)
+            }
          }).catch(() => {
-            if (!cancelled) setMovies([])
+            if (!cancelled) {
+               setMovies([])
+               setIsLoading(false)
+            }
          })
       } else if (selection?.type === "category") {
          getMoviesByCategory(selection.value).then((result) => {
-            if (!cancelled) setMovies(result.results)
-         })
+            if (!cancelled) {
+               setMovies(result.results)
+               setIsLoading(false)
+            }
+         }).catch(() => !cancelled && setIsLoading(false))
       } else if (selection?.type === "genre") {
          getMoviesByGenre(selection.value).then((result) => {
-            if (!cancelled) setMovies(result.results)
-         })
+            if (!cancelled) {
+               setMovies(result.results)
+               setIsLoading(false)
+            }
+         }).catch(() => !cancelled && setIsLoading(false))
       } else {
          setMovies([])
+         setIsLoading(false)
       }
 
       return () => {
          cancelled = true
       }
    }, [searchQuery, selection])
+
+   if (isLoading) return <SearchPageSkeleton />
 
    const title = searchQuery
       ? `Results for "${searchQuery}"`

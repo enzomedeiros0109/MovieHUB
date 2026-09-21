@@ -6,6 +6,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { ButtonGroup } from '../ui/button-group'
 import { Search } from 'lucide-react'
+import SearchBarSkeleton from '../skeletons/SearchBarSkeleton'
 
 type Props = {
   onSearch: (query: string) => void
@@ -15,6 +16,7 @@ type Props = {
 const SearchBar = ({ onSearch, searchQuery }: Props) => {
   const [query, setQuery] = useState("")
   const [suggestions, setSuggestions] = useState<Awaited<ReturnType<typeof searchMulti>>["results"]>([])
+  const [isSearching, setIsSearching] = useState(false)
   const searchContainerRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
 
@@ -38,15 +40,21 @@ const SearchBar = ({ onSearch, searchQuery }: Props) => {
 
     if (!trimmedQuery) {
       setSuggestions([])
+      setIsSearching(false)
       return
     }
 
+    setIsSearching(true)
     const timeoutId = window.setTimeout(() => {
       searchMulti(trimmedQuery)
         .then((result) => {
               setSuggestions(result.results.filter((result) => result.media_type === "movie").slice(0, 10))
+              setIsSearching(false)
         })
-        .catch(() => setSuggestions([]))
+        .catch(() => {
+          setSuggestions([])
+          setIsSearching(false)
+        })
     }, 300)
 
     return () => window.clearTimeout(timeoutId)
@@ -104,7 +112,7 @@ const SearchBar = ({ onSearch, searchQuery }: Props) => {
         </Button>
       </ButtonGroup>
 
-      {suggestions.length > 0 && (
+      {isSearching ? <SearchBarSkeleton /> : suggestions.length > 0 && (
         <div className="animate-in fade-in-0 slide-in-from-top-2 duration-200 motion-reduce:animate-none absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-xl border bg-popover p-1 text-popover-foreground shadow-lg">
           {suggestions.map((movie) => {
             const movieTitle = movie.title ?? movie.original_title ?? "Unknown title"
