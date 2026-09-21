@@ -75,7 +75,7 @@ const SearchBar = ({ onSearch, searchQuery }: Props) => {
 
     setSuggestions([])
     onSearch(trimmedQuery)
-    navigate("/")
+    navigate("/search")
   }
 
    return (

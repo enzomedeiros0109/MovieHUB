@@ -1,6 +1,7 @@
 import { getMovieCredits } from "@/api/api"
 import { useEffect, useState } from "react"
 import UnknownUser from '@/assets/unknown-user.svg'
+import BackButton from "../layout/BackButton"
 
 export type MoviePageProps = {
    movie_id: number,
@@ -13,7 +14,6 @@ export type MoviePageProps = {
 }
 
 const MoviePage = ({ movie_id, title, movieYear, director, vote_average, overview, backdrop_path }: MoviePageProps) => {
-
    const [movieCredit, setMovieCredit] = useState<{
       id: number
       credit_id: string
@@ -32,10 +32,11 @@ const MoviePage = ({ movie_id, title, movieYear, director, vote_average, overvie
 
    return (
       <section className="relative h-[calc(100vh-5rem)] overflow-x-hidden overflow-y-scroll bg-black text-white">
+         <BackButton />
          <img
             src={backdrop_path}
             alt={`${title} backdrop`}
-            className="inset-0 h-120 w-full object-cover opacity-60"
+            className="mx-auto block h-auto w-full opacity-60"
             style={{
                maskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
                WebkitMaskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
@@ -55,22 +56,22 @@ const MoviePage = ({ movie_id, title, movieYear, director, vote_average, overvie
             <div className="grid grid-cols-3 justify-between">
                {movieCredit.map((actor) => {
                   return (
-                     <div key={actor.credit_id} className="flex flex-col gap-2 items-center justify-center text-center mt-2">
+                     <div key={actor.credit_id} className="flex flex-col gap-2 items-center">
                         {actor.profile_path ? (
                            <img
                               src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`}
-                              alt={`${actor.name} profile`}
-                              className="size-24 rounded-full object-cover"
+                              alt={`${actor.name} image`}
+                              className="size-20 rounded-full object-cover"
                            />
                         ) : (
-                           <div className="flex size-24 items-center justify-center rounded-full bg-white/20 text-xs">
+                           <div className="flex size-20 items-center justify-center rounded-full bg-white/20 text-xs">
                               <img
                                  src={UnknownUser} alt="Image"
                                  className="size-20"
                               />
                            </div>
                         )}
-                        <div className="mb-4">
+                        <div className="text-center mb-4">
                            <p className="text-sm font-semibold">{actor.name}</p>
                            <p className="text-sm text-white/60">as {actor.character}</p>
                         </div>

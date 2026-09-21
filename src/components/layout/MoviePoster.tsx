@@ -3,14 +3,14 @@ import { getPosterUrl } from "@/api/api";
 import { useNavigate } from "react-router-dom";
 import type { MoviePageProps } from "../pages/MoviePage";
 import type { MovieSearchResponse } from "@/schemas/search-by-genre-schema"
-import { Star, StarHalf } from "lucide-react";
+import { Star } from "lucide-react";
 
 type Props = {
    movies: MovieSearchResponse["results"]
    genreNames: Record<number, string>
 }
 
-const MoviePoster = ({ movies, genreNames }: Props) => {
+const MoviePoster = ({ movies }: Props) => {
 
    const navigate = useNavigate()
 
@@ -72,25 +72,26 @@ const MoviePoster = ({ movies, genreNames }: Props) => {
 
             return (
                <button
-                  className="w-[calc(100%-2rem)] border border-transparent rounded-4xl transform transition-all duration-300 ease-in-out hover:scale-105 hover:border-white cursor-pointer md:w-full"
+                  key={movie.id}
+                  className="mx-auto block w-full cursor-pointer rounded-4xl border border-transparent transition-colors duration-300 hover:border-white"
                   onClick={() => handlePosterClick(movie)}
                >
-                  <CardRoot className="w-full">
-                     <CardHeader className="">
-                        <CardTitle className="text-center text-xl font-bold">{movieTitle}</CardTitle>
+                  <CardRoot className="w-full gap-0">
+                     <CardHeader className="overflow-hidden">
+                        <CardTitle className="line-clamp-2 text-center text-xl font-bold">{movieTitle}</CardTitle>
                      </CardHeader>
-                     <CardContent className="flex items-center justify-center text-center">
+                     <CardContent className="flex items-center justify-center text-center mt-4">
                         {posterUrl ? (
                            <img
                               src={posterUrl}
                               alt={movieTitle}
-                              className="h-80 md:h-90 w-full object-scale-down rounded-md"
+                              className="h-80 w-full object-contain object-center md:h-90"
                            />
                         ) : (
                            <p>Poster not available</p>
                         )}
                      </CardContent>
-                     <CardFooter className="justify-between">
+                     <CardFooter className="justify-between mt-4">
                         <div className="flex gap-1">
                            {StarRating({ rating: movie.vote_average })}
                         </div>
