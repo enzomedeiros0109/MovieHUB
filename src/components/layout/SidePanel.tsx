@@ -3,6 +3,7 @@ import { getGenres } from "@/api/api"
 import Menu from '@/assets/menu.svg'
 import ArrowBack from '@/assets/arrow-back.svg'
 import type { HomeSelection } from "@/App"
+import GenreListSkeleton from "../skeletons/GenreListSkeleton"
 
 type Props = {
    onSelect: (selection: HomeSelection) => void
@@ -12,6 +13,7 @@ const SidePanel = ({ onSelect }: Props) => {
 
    const [isOpen, setIsOpen] = useState(false)
    const [genres, setGenres] = useState<{ id: number; name: string }[]>([])
+   const [isLoading, setIsLoading] = useState(true)
 
    const categories = [
       { label: "Popular", value: "popular" },
@@ -21,7 +23,10 @@ const SidePanel = ({ onSelect }: Props) => {
    ] as const
 
    useEffect(() => {
-      getGenres().then((result) => setGenres(result.genres))
+      getGenres().then((result) => {
+         setGenres(result.genres)
+         setIsLoading(false)
+      }).catch(() => setIsLoading(false))
    }, [])
 
    return (
@@ -88,7 +93,7 @@ const SidePanel = ({ onSelect }: Props) => {
                   <p className="text-lg font-semibold select-none">
                      Genres
                   </p>
-                  <div className="flex flex-col gap-2 pl-2">
+                  {isLoading ? <GenreListSkeleton /> : <div className="flex flex-col gap-2 pl-2">
                      {genres.map((genre) => {
                         return (
                            <button
@@ -105,7 +110,7 @@ const SidePanel = ({ onSelect }: Props) => {
                            </button>
                         )
                      })}
-                  </div>
+                  </div>}
                </div>
 
             </div>

@@ -2,6 +2,7 @@ import { getMovieCredits } from "@/api/api"
 import { useEffect, useState } from "react"
 import UnknownUser from '@/assets/unknown-user.svg'
 import BackButton from "../layout/BackButton"
+import MoviePageSkeleton from "../skeletons/MoviePageSkeleton"
 
 export type MoviePageProps = {
    movie_id: number,
@@ -22,13 +23,17 @@ const MoviePage = ({ movie_id, title, movieYear, director, vote_average, overvie
       character: string
    }[]>([])
    const [movieDirector, setMovieDirector] = useState<string>()
+   const [isLoading, setIsLoading] = useState(true)
 
    useEffect(() => {
       getMovieCredits(String(movie_id)).then((result) => {
          setMovieCredit(result.cast.slice(0, 15))
          setMovieDirector(result.crew.find((crewMember) => crewMember.job === "Director")?.name)
+            setIsLoading(false)
       })
    }, [movie_id])
+
+         if (isLoading) return <MoviePageSkeleton />
 
    return (
       <section className="relative h-[calc(100vh-5rem)] overflow-x-hidden overflow-y-scroll bg-black text-white">
