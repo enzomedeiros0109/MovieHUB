@@ -77,8 +77,12 @@ const MoviePoster = ({ movies }: Props) => {
                   onClick={() => handlePosterClick(movie)}
                >
                   <CardRoot className="w-full gap-0">
-                     <CardHeader className="overflow-hidden">
-                        <CardTitle className="line-clamp-2 text-center text-xl font-bold">{movieTitle}</CardTitle>
+                     <CardHeader className="h-14 overflow-hidden">
+                        <CardTitle
+                           className={`line-clamp-2 text-center font-bold leading-tight ${movieTitle.length > 24 ? "text-lg" : "text-xl"}`}
+                        >
+                           {movieTitle}
+                        </CardTitle>
                      </CardHeader>
                      <CardContent className="flex items-center justify-center text-center mt-4">
                         {posterUrl ? (
