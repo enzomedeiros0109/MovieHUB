@@ -13,17 +13,17 @@ type MovieCarouselProps = {
 
 function MovieCarousel({ title, movies, genreNames }: MovieCarouselProps) {
   return (
-    <section className="flex flex-col items-center gap-3">
-      <h2 className="w-full max-w-md border-l-4 border-primary pl-3 text-left text-3xl font-bold text-foreground">
+    <section className="flex w-full flex-col items-start gap-3">
+      <h2 className="w-full max-w-md border-l-4 border-yellow-500 pl-3 text-left text-4xl font-bold text-foreground">
         {title}
       </h2>
       <Carousel
         opts={{ align: "start", containScroll: "trimSnaps" }}
-        className="relative w-full max-w-md touch-pan-y px-12"
+        className="relative w-full touch-pan-y px-12"
       >
         <CarouselContent>
           {movies.map((movie) => (
-            <CarouselItem key={movie.id} className="basis-full pl-4">
+            <CarouselItem key={movie.id} className="basis-full pl-4 md:basis-1/2 lg:basis-1/3">
               <MoviePoster movies={[movie]} genreNames={genreNames} />
             </CarouselItem>
           ))}
