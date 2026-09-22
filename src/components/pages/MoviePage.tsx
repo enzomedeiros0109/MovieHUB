@@ -84,7 +84,7 @@ const MoviePage = ({ movie_id, title, movieYear, director, vote_average, overvie
 
          if (!cancelled) {
             setMovieDetails(details)
-            setMovieCredit(credits.cast.slice(0, 15))
+            setMovieCredit(credits.cast.slice(0, 12))
             setMovieDirector(credits.crew.find((crewMember) => crewMember.job === "Director")?.name)
             const moviesWithLogos = await Promise.all(
                similar.results.slice(0, 12).map(async (movie) => {
